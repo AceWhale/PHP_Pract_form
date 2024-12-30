@@ -1,5 +1,10 @@
 <h3>Upload Form</h3>
 <?php
+session_start();
+if (!isset($_SESSION['registered_user'])) {
+    echo "<script>window.location = 'index.php?page=4';</script>";
+    exit();
+}
 if(!isset($_POST['uppbtn']))
 {
     ?>

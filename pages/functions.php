@@ -38,3 +38,30 @@ function register($name, $pass, $email)
     fclose($file);
     return true;
 }
+
+function login($name, $pass)
+{
+    global $users;
+    $name = trim(htmlspecialchars($name));
+    $pass = trim(htmlspecialchars($pass));
+
+    if ($name == '' || $pass == '') {
+        echo "<h3/><span style='color:red;'>Both fields are required!</span><h3/>";
+        return false;
+    }
+
+    $file = fopen($users, 'r');
+    while ($line = fgets($file, 128)) {
+        $line = trim($line);
+        list($stored_name, $stored_pass) = explode(":", $line);
+        if ($stored_name == $name && md5($pass) == $stored_pass) {
+            // Створюємо сесію, якщо користувач знайдений
+            $_SESSION['registered_user'] = $name;
+            fclose($file);
+            return true;
+        }
+    }
+    fclose($file);
+    echo "<script>window.location = 'index.php?page=4';</script>";
+    return false;
+}
